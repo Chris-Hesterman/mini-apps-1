@@ -15,37 +15,48 @@ class Board {
       [1, 5, 9],
       [3, 5, 7]
     ];
+    this.checkForWin = this.checkForWin.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   checkForWin() {
     let result = false;
 
-    for (let solution in this.solutions) {
+    for (let solution of this.solutions) {
       result = solution.every((item) => {
-        if (currentTurn) {
-          return this.ohs.hasOwnProperty(item.toString());
+        if (this.currentTurn) {
+          return this.ohs.hasOwnProperty(item);
         } else {
-          return this.exes.hasOwnProperty(item.toString());
+          return this.exes.hasOwnProperty(item);
         }
       });
-      if (result) {
-        return result;
-      }
+      // if (result) {
+      //   console.log('winner');
+      //   return result;
+      // }
+      // console.log(result);
     }
     return result;
   }
 
-  clickHandler(e) {
+  handleClick(e) {
     e.target.style.outline = 'none';
 
     if (e.target.textContent === '..') {
       e.target.textContent = this.currentTurn === true ? 'O' : 'X';
+      if (this.currentTurn) {
+        this.ohs[e.target.id] = e.target.id;
+      } else {
+        this.exes[e.target.id] = e.target.id;
+      }
       this.currentTurn = !this.currentTurn;
     }
-    if (this.checkForWin) {
-      console.log('WINNER', e.target.textContent);
+    console.log(this.exes, this.ohs);
+    if (this.checkForWin()) {
     }
   }
 }
 
-clickme.addEventListener('click', TTT.clickHandler);
+let TTT = new Board();
+
+clickme.addEventListener('click', TTT.handleClick);
