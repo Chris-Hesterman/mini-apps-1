@@ -24,17 +24,18 @@ class Board {
 
     for (let solution of this.solutions) {
       result = solution.every((item) => {
-        if (this.currentTurn) {
-          return this.ohs.hasOwnProperty(item);
+        if (!this.currentTurn) {
+          return this.ohs.hasOwnProperty(item.toString());
         } else {
-          return this.exes.hasOwnProperty(item);
+          return this.exes.hasOwnProperty(item.toString());
         }
       });
-      // if (result) {
-      //   console.log('winner');
-      //   return result;
-      // }
-      // console.log(result);
+      if (result) {
+        console.log('winner');
+        clickme.removeEventListener('click', this.handleClick);
+        return result;
+      }
+      console.log(result);
     }
     return result;
   }
@@ -45,13 +46,13 @@ class Board {
     if (e.target.textContent === '..') {
       e.target.textContent = this.currentTurn === true ? 'O' : 'X';
       if (this.currentTurn) {
-        this.ohs[e.target.id] = e.target.id;
+        this.ohs[e.target.id] = e.target.id.toString();
       } else {
-        this.exes[e.target.id] = e.target.id;
+        this.exes[e.target.id] = e.target.id.toString();
       }
       this.currentTurn = !this.currentTurn;
     }
-    console.log(this.exes, this.ohs);
+    // console.log(this.exes, this.ohs);
     if (this.checkForWin()) {
     }
   }
