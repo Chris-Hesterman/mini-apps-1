@@ -1,15 +1,18 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
-const port = 4568;
+const port = 3000;
 
-// app.use(express.static('client'));
+app.use('/ham', express.static('client'));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
-  res.send('Hey There World');
+  res.end('Hey There World');
 });
 
 app.post('/', (req, res) => {
-  res.send('Got a POST request');
+  res.end(JSON.stringify(req.body));
 });
 
 app.listen(port, () => console.log(`Server is running on port ${port}`));
