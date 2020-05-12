@@ -1,4 +1,5 @@
 var game = document.querySelector('.board');
+var squares = document.querySelectorAll('.playerSquare');
 var reset = document.querySelector('.reset');
 var stateOfGame = document.querySelector('h2');
 var turn = document.querySelector('span');
@@ -7,7 +8,7 @@ class Board {
     this.moves = 0;
     this.exes = {};
     this.ohs = {};
-    this.over = false;
+    this.gamegameOver = false;
     this.currentTurn = false;
     this.solutions = [
       [1, 2, 3],
@@ -21,7 +22,7 @@ class Board {
     ];
     this.checkForWin = this.checkForWin.bind(this);
     this.handleClick = this.handleClick.bind(this);
-    this.handleReset = this.handleReset.bind(this);
+    this.reset = this.reset.bind(this);
   }
 
   checkForWin() {
@@ -37,7 +38,7 @@ class Board {
       });
       if (result) {
         game.removeEventListener('click', this.handleClick);
-        this.over = true;
+        this.gameOver = true;
         return result;
       }
     }
@@ -60,31 +61,31 @@ class Board {
     }
     if (this.checkForWin()) {
       this.moves = 0;
-      this.over = true;
+      this.gameOver = true;
       stateOfGame.textContent = `${e.target.textContent} WINS!!`;
     }
-    if (this.moves >= 9 && !this.over) {
-      this.over = true;
+    if (this.moves >= 9 && !this.gameOver) {
+      this.gameOver = true;
       game.removeEventListener('click', this.handleClick);
       stateOfGame.textContent = 'TIE GAME';
     }
     turn.textContent = this.currentTurn ? 'O' : 'X';
   }
 
-  handleReset(e) {
+  reset(e) {
     e.target.style.outline = 'none';
-    let squares = document.querySelectorAll('.playerSquare');
+
     for (let square of squares) {
       square.textContent = '..';
     }
     this.exes = {};
     this.ohs = {};
-    this.moves = 0;
     this.currentTurn = false;
 
-    if (this.over) {
-      this.over = false;
+    if (this.gameOver) {
+      this.gameOver = false;
       stateOfGame.textContent = 'Game In Progress';
+      turn.textContent = 'X';
       game.addEventListener('click', this.handleClick);
     }
   }
@@ -93,4 +94,4 @@ class Board {
 let TicTacToe = new Board();
 
 game.addEventListener('click', TicTacToe.handleClick);
-reset.addEventListener('click', TicTacToe.handleReset);
+reset.addEventListener('click', TicTacToe.reset);
