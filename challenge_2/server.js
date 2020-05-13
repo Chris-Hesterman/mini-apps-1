@@ -12,7 +12,22 @@ app.get('/', (req, res) => {
 });
 
 app.post('/', (req, res) => {
-  res.send(req.body);
+  console.log(req.body.jsonData);
+  let csv =
+    'firstName,lastName,county,city,role,sales<br>Joshie,Wyattson,San Mateo,San Mateo,Broker,1000000<br>Beth Jr.,Johnson,San Mateo,Pacifica,Manager,2900000<br>Smitty,Won,San Mateo,Redwood City,Sales Person,4800000<br>Allen,Price,San Mateo,Burlingame,Sales Person,2500000<br>Beth,Johnson,San Francisco,San Francisco,Broker/Sales Person,7500000<br>';
+  res.format({
+    'text/html': function () {
+      res.send(`<div>${csv}</div><form action="http://127.0.0.1:3000/" method="POST">
+        <input
+          id="input"
+          type="text-area"
+          name="jsonData"
+          placeholder="paste data here"
+        />
+        <button type="submit">Submit</button>
+      </form>`);
+    }
+  });
   res.end();
 });
 
