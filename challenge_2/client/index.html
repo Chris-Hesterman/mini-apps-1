@@ -3,11 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <title>CSV Report Generator</title>
     <!-- <link rel="stylesheet" href="stylesheet.css" type="text/css"> -->
   </head>
   <body>
     <h1>CSV Report Generator</h1>
+    <div>
+      <form>
+        <input
+          id="input"
+          type="text-area"
+          name="jsonData"
+          placeholder="paste data here"
+        />
+        <button type="submit">Submit</button>
+      </form>
+    </div>
     <script src="app.js"></script>
   </body>
 </html>
