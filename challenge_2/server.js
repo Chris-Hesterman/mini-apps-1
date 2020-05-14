@@ -12,9 +12,48 @@ app.get('/', (req, res) => {
 });
 
 app.post('/', (req, res) => {
-  console.log(req.body.jsonData);
-  let csv =
-    'firstName,lastName,county,city,role,sales<br>Joshie,Wyattson,San Mateo,San Mateo,Broker,1000000<br>Beth Jr.,Johnson,San Mateo,Pacifica,Manager,2900000<br>Smitty,Won,San Mateo,Redwood City,Sales Person,4800000<br>Allen,Price,San Mateo,Burlingame,Sales Person,2500000<br>Beth,Johnson,San Francisco,San Francisco,Broker/Sales Person,7500000<br>';
+  console.log(req.body);
+  var flattenJSON = (obj) => {
+    let results = [];
+
+    var helper = (obj) => {
+      let children = obj.children;
+
+      delete obj.children;
+      results.push(obj);
+      for (let child of children) {
+        helper(child);
+      }
+    };
+    helper(obj);
+
+    return results;
+  };
+
+  var getReport = (array) => {
+    let headersObj = {};
+    let results;
+
+    for (let item of array) {
+      let keys = Object.keys(item);
+      for (let key of keys) {
+        if (!headersObj[key] && key !== 'children') {
+          headersObj[key] = key;
+        }
+      }
+    }
+    results = Object.keys(headersObj).join(',') + '<br>';
+    for (let record of array) {
+      let statsArray = Object.values(record);
+      results += statsArray.join(',') + '<br>';
+    }
+
+    return results;
+  };
+
+  let flat = flattenJSON(JSON.parse(req.body.jsonData));
+  let csv = getReport(flat);
+
   res.format({
     'text/html': function () {
       res.send(`<div>${csv}</div><form action="http://127.0.0.1:3000/" method="POST">
