@@ -1,19 +1,20 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const app = express();
+const multer = require('multer');
+const upload = multer();
 const port = 3000;
 
 app.use(express.static('client'));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
   res.end('Hey There World');
 });
 
-app.post('/', (req, res) => {
-  console.log(req.body);
+app.post('/', upload.single('jsonData'), (req, res, next) => {
   var flattenJSON = (obj) => {
+    console.log(obj.children);
     let results = [];
 
     var helper = (obj) => {
@@ -51,15 +52,17 @@ app.post('/', (req, res) => {
     return results;
   };
 
-  let flat = flattenJSON(JSON.parse(req.body.jsonData));
+  let objFromJSON = JSON.parse(req.file.buffer.toString());
+  let flat = flattenJSON(objFromJSON);
   let csv = getReport(flat);
 
   res.format({
     'text/html': function () {
-      res.send(`<div>${csv}</div><form action="http://127.0.0.1:3000/" method="POST">
+      res.send(`<div>${csv}</div><form action="http://127.0.0.1:3000/" method="POST" enctype="multipart/form-data">
         <input
           id="input"
-          type="text-area"
+          type="file"
+          accept=".json"
           name="jsonData"
           placeholder="paste data here"
         />

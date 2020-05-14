@@ -10,11 +10,16 @@
   <body>
     <h1>CSV Report Generator</h1>
     <div>
-      <form action="http://127.0.0.1:3000/" method="POST">
+      <form
+        action="http://127.0.0.1:3000/"
+        method="POST"
+        enctype="multipart/form-data"
+      >
         <input
           id="input"
-          type="text-area"
+          type="file"
           name="jsonData"
+          accept=".json"
           placeholder="paste data here"
         />
         <button type="submit">Submit</button>
