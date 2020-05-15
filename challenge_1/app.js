@@ -3,13 +3,19 @@ var squares = document.querySelectorAll('.playerSquare');
 var reset = document.querySelector('.reset');
 var stateOfGame = document.querySelector('h2');
 var turn = document.querySelector('span');
+var turnIndicator = document.querySelector('h3');
+var exesWins = document.querySelector('#exesWins');
+var ohsWins = document.querySelector('#ohsWins');
 class Board {
   constructor() {
     this.moves = 0;
     this.exes = {};
     this.ohs = {};
+    this.exesWins = 0;
+    this.ohsWins = 0;
     this.gamegameOver = false;
     this.currentTurn = false;
+    this.lastWinner = 'X';
     this.solutions = [
       [1, 2, 3],
       [4, 5, 6],
@@ -62,14 +68,23 @@ class Board {
     if (this.checkForWin()) {
       this.moves = 0;
       this.gameOver = true;
+      this.lastWinner = e.target.textContent;
+      if (e.target.textContent === 'X') {
+        this.exesWins++;
+        exesWins.textContent = this.exesWins + ' ';
+      } else {
+        this.ohsWins++;
+        ohsWins.textContent = this.ohsWins + ' ';
+      }
       stateOfGame.textContent = `${e.target.textContent} WINS!!`;
     }
     if (this.moves >= 9 && !this.gameOver) {
       this.gameOver = true;
+      this.moves = 0;
       game.removeEventListener('click', this.handleClick);
       stateOfGame.textContent = 'TIE GAME';
     }
-    turn.textContent = this.currentTurn ? 'O' : 'X';
+    // turn.textContent = this.currentTurn ? 'O' : 'X';
   }
 
   reset(e) {
@@ -80,12 +95,12 @@ class Board {
     }
     this.exes = {};
     this.ohs = {};
-    this.currentTurn = false;
 
     if (this.gameOver) {
       this.gameOver = false;
       stateOfGame.textContent = 'Game In Progress';
-      turn.textContent = 'X';
+      this.currentTurn = this.lastWinner === 'X' ? false : true;
+      turn.textContent = this.currentTurn === true ? 'O' : 'X';
       game.addEventListener('click', this.handleClick);
     }
   }
