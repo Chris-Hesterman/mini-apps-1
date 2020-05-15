@@ -15,9 +15,7 @@ $('form').on('submit', (e) => {
   e.preventDefault();
   let data = new FormData();
   let file = $('input')[0].files[0];
-  console.log(file);
 
   data.set('jsonData', file);
-
   postData(data);
 });

@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const multer = require('multer');
 const upload = multer();
+const fs = require('fs');
 const port = 3000;
 
 app.use(express.static('client'));
@@ -28,8 +29,9 @@ app.post('/', upload.single('jsonData'), (req, res, next) => {
     return results;
   };
 
-  var getReport = (array) => {
+  var createReport = (array) => {
     let headersObj = {};
+    let fileResults;
     let results;
 
     for (let item of array) {
@@ -40,18 +42,29 @@ app.post('/', upload.single('jsonData'), (req, res, next) => {
         }
       }
     }
+
     results = Object.keys(headersObj).join(', ') + '<br>';
+    fileResults = Object.keys(headersObj).join(', ') + '\n';
+
     for (let record of array) {
       let statsArray = Object.values(record);
       results += statsArray.join(', ') + '<br>';
+      fileResults += statsArray.join(', ') + '\n';
     }
+    fs.writeFile('latestCSVReport.csv', fileResults, (err) => {
+      if (err) {
+        throw err;
+      } else {
+        console.log('file saved!');
+      }
+    });
 
     return results;
   };
 
   let objFromJSON = JSON.parse(req.file.buffer.toString());
   let flat = flattenJSON(objFromJSON);
-  let csv = getReport(flat);
+  let csv = createReport(flat);
 
   res.format({
     'text/html': function () {
@@ -59,6 +72,17 @@ app.post('/', upload.single('jsonData'), (req, res, next) => {
     }
   });
   res.end();
+});
+
+app.get('/download', (req, res) => {
+  res.download(__dirname + '/latestCSVReport.csv', (err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log('received download request');
+      res.end();
+    }
+  });
 });
 
 app.listen(port, () => console.log(`Server is running on port ${port}`));
