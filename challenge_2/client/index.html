@@ -9,19 +9,9 @@
   </head>
   <body>
     <h1>CSV Report Generator</h1>
-    <div>
-      <form
-        action="http://127.0.0.1:3000/"
-        method="POST"
-        enctype="multipart/form-data"
-      >
-        <input
-          id="input"
-          type="file"
-          name="jsonData"
-          accept=".json"
-          placeholder="paste data here"
-        />
+    <div class="fileUpload">
+      <form enctype="multipart/form-data" method="POST">
+        <input id="input" type="file" name="jsonData" accept=".json" />
         <button type="submit">Submit</button>
       </form>
     </div>

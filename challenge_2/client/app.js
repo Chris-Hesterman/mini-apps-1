@@ -1,38 +1,23 @@
-class CSVGenerator {
-  constructor() {
-    // this.postData = this.postData.bind(this);
-  }
-  // async postData(data) {
-  //   const response = await fetch('http://127.0.0.1:3000/', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: data
-  //   });
-  //   return response;
-  // }
-}
+var postData = (data) => {
+  $.ajax({
+    url: 'http://127.0.0.1:3000/',
+    type: 'POST',
+    data: data,
+    cache: false,
+    processData: false,
+    contentType: false
+  }).done((response) => {
+    $('.fileUpload').append(response);
+  });
+};
 
-// let CSV = new CSVGenerator();
+$('form').on('submit', (e) => {
+  e.preventDefault();
+  let data = new FormData();
+  let file = $('input')[0].files[0];
+  console.log(file);
 
-// $('form').on('submit', (e) => {
-//   e.preventDefault();
-//   let input = $('input');
-//   // console.log(data);
-//   CSV.postData(input.val())
-//     .then((data) => data.json())
-//     .then((results) => {
-//       input.val('');
-//       console.log(results);
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// });
+  data.set('jsonData', file);
 
-// CSV.postData(data)
-//   .then((response) => console.log('response', response))
-//   .catch((err) => {
-//     console.log(err);
-//   });
+  postData(data);
+});

@@ -5,8 +5,6 @@ const upload = multer();
 const port = 3000;
 
 app.use(express.static('client'));
-// app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
   res.end('Hey There World');
@@ -14,7 +12,6 @@ app.get('/', (req, res) => {
 
 app.post('/', upload.single('jsonData'), (req, res, next) => {
   var flattenJSON = (obj) => {
-    console.log(obj.children);
     let results = [];
 
     var helper = (obj) => {
@@ -43,10 +40,10 @@ app.post('/', upload.single('jsonData'), (req, res, next) => {
         }
       }
     }
-    results = Object.keys(headersObj).join(',') + '<br>';
+    results = Object.keys(headersObj).join(', ') + '<br>';
     for (let record of array) {
       let statsArray = Object.values(record);
-      results += statsArray.join(',') + '<br>';
+      results += statsArray.join(', ') + '<br>';
     }
 
     return results;
@@ -58,16 +55,7 @@ app.post('/', upload.single('jsonData'), (req, res, next) => {
 
   res.format({
     'text/html': function () {
-      res.send(`<div>${csv}</div><form action="http://127.0.0.1:3000/" method="POST" enctype="multipart/form-data">
-        <input
-          id="input"
-          type="file"
-          accept=".json"
-          name="jsonData"
-          placeholder="paste data here"
-        />
-        <button type="submit">Submit</button>
-      </form>`);
+      res.status(202).send(`<div><br>${csv}</div>`);
     }
   });
   res.end();
