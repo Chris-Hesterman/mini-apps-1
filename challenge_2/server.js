@@ -12,20 +12,31 @@ app.get('/', (req, res) => {
 });
 
 app.post('/', upload.single('jsonData'), (req, res, next) => {
+  let id = 1;
   var flattenJSON = (obj) => {
     let results = [];
 
     var helper = (obj) => {
       let children = obj.children;
+      obj.id = id;
+      if (!obj.parentId) {
+        obj.parentId = ' * ';
+      }
+      id++;
+
+      for (let child of children) {
+        child.parentId = obj.id;
+      }
 
       delete obj.children;
       results.push(obj);
+
       for (let child of children) {
         helper(child);
       }
     };
     helper(obj);
-
+    console.log(results);
     return results;
   };
 
@@ -42,14 +53,20 @@ app.post('/', upload.single('jsonData'), (req, res, next) => {
         }
       }
     }
-
-    results = Object.keys(headersObj).join(', ') + '<br>';
-    fileResults = Object.keys(headersObj).join(', ') + '\n';
+    delete headersObj.id;
+    delete headersObj.parentId;
+    results = 'id, parentId, ' + Object.keys(headersObj).join(', ') + '<br>';
+    fileResults = 'id, parentId, ' + Object.keys(headersObj).join(', ') + '\n';
 
     for (let record of array) {
+      let parentId = record.parentId;
+      let id = record.id;
+      delete record.parentId;
+      delete record.id;
       let statsArray = Object.values(record);
-      results += statsArray.join(', ') + '<br>';
-      fileResults += statsArray.join(', ') + '\n';
+
+      results += `${id},  ${parentId}, ${statsArray.join(', ')}<br>`;
+      fileResults += `${id},  ${parentId}, ${statsArray.join(', ')}\n`;
     }
     fs.writeFile('latestCSVReport.csv', fileResults, (err) => {
       if (err) {
