@@ -28,6 +28,7 @@ class Board {
     ];
     this.checkForWin = this.checkForWin.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.updateGameStatus = this.updateGameStatus.bind(this);
     this.reset = this.reset.bind(this);
   }
 
@@ -66,17 +67,8 @@ class Board {
       this.currentTurn = !this.currentTurn;
     }
     if (this.checkForWin()) {
-      this.moves = 0;
-      this.gameOver = true;
-      this.lastWinner = e.target.textContent;
-      if (e.target.textContent === 'X') {
-        this.exesWins++;
-        exesWins.textContent = this.exesWins + ' ';
-      } else {
-        this.ohsWins++;
-        ohsWins.textContent = this.ohsWins + ' ';
-      }
-      stateOfGame.textContent = `${e.target.textContent} WINS!!`;
+      console.log(this.checkForWin());
+      this.updateGameStatus(e.target.textContent);
     }
     if (this.moves >= 9 && !this.gameOver) {
       this.gameOver = true;
@@ -84,7 +76,21 @@ class Board {
       game.removeEventListener('click', this.handleClick);
       stateOfGame.textContent = 'TIE GAME';
     }
-    // turn.textContent = this.currentTurn ? 'O' : 'X';
+  }
+
+  updateGameStatus(lastWinner) {
+    this.moves = 0;
+    this.gameOver = true;
+    this.lastWinner = lastWinner;
+
+    if (this.lastWinner === 'X') {
+      this.exesWins++;
+      exesWins.textContent = this.exesWins + ' ';
+    } else {
+      this.ohsWins++;
+      ohsWins.textContent = this.ohsWins + ' ';
+    }
+    stateOfGame.textContent = `${this.lastWinner} WINS!!`;
   }
 
   reset(e) {
