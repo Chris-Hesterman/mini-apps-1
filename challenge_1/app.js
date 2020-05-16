@@ -1,119 +1,115 @@
-var game = document.querySelector('.board');
-var squares = document.querySelectorAll('.playerSquare');
-var reset = document.querySelector('.reset');
-var stateOfGame = document.querySelector('h2');
-var turn = document.querySelector('span');
-var turnIndicator = document.querySelector('h3');
-var exesWins = document.querySelector('#exesWins');
-var ohsWins = document.querySelector('#ohsWins');
-class Board {
-  constructor() {
-    this.moves = 0;
-    this.exes = {};
-    this.ohs = {};
-    this.exesWins = 0;
-    this.ohsWins = 0;
-    this.gamegameOver = false;
-    this.currentTurn = false;
-    this.lastWinner = 'X';
-    this.solutions = [
-      [1, 2, 3],
-      [4, 5, 6],
-      [7, 8, 9],
-      [1, 4, 7],
-      [2, 5, 8],
-      [3, 6, 9],
-      [1, 5, 9],
-      [3, 5, 7]
-    ];
-    this.checkForWin = this.checkForWin.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-    this.updateGameStatus = this.updateGameStatus.bind(this);
-    this.reset = this.reset.bind(this);
-  }
+const game = document.querySelector('.board');
+const squares = document.querySelectorAll('.playerSquare');
+const reset = document.querySelector('.reset');
+const stateOfGame = document.querySelector('h2');
+const turn = document.querySelector('span');
+const turnIndicator = document.querySelector('h3');
+const exesWins = document.querySelector('#exesWins');
+const ohsWins = document.querySelector('#ohsWins');
 
-  checkForWin() {
-    let result = false;
+const gameState = {
+  moves: 0,
+  exes: {},
+  ohs: {},
+  exesWins: 0,
+  ohsWins: 0,
+  gamegameOver: false,
+  currentTurn: false,
+  lastWinner: 'X',
+  solutions: [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9],
+    [1, 4, 7],
+    [2, 5, 8],
+    [3, 6, 9],
+    [1, 5, 9],
+    [3, 5, 7]
+  ]
+};
 
-    for (let solution of this.solutions) {
-      result = solution.every((item) => {
-        if (!this.currentTurn) {
-          return this.ohs.hasOwnProperty(item);
-        } else {
-          return this.exes.hasOwnProperty(item);
-        }
-      });
-      if (result) {
-        game.removeEventListener('click', this.handleClick);
-        this.gameOver = true;
-        return result;
-      }
-    }
-    return result;
-  }
+const checkForWin = () => {
+  let result = false;
 
-  handleClick(e) {
-    e.target.style.outline = 'none';
-
-    if (e.target.textContent === '..') {
-      e.target.textContent = this.currentTurn === true ? 'O' : 'X';
-
-      if (this.currentTurn) {
-        this.ohs[e.target.id] = e.target.id;
+  for (let solution of gameState.solutions) {
+    result = solution.every((item) => {
+      if (!gameState.currentTurn) {
+        return gameState.ohs.hasOwnProperty(item);
       } else {
-        this.exes[e.target.id] = e.target.id;
+        return gameState.exes.hasOwnProperty(item);
       }
-      this.moves++;
-      this.currentTurn = !this.currentTurn;
-    }
-    if (this.checkForWin()) {
-      console.log(this.checkForWin());
-      this.updateGameStatus(e.target.textContent);
-    }
-    if (this.moves >= 9 && !this.gameOver) {
-      this.gameOver = true;
-      this.moves = 0;
-      game.removeEventListener('click', this.handleClick);
-      stateOfGame.textContent = 'TIE GAME';
+    });
+    if (result) {
+      game.removeEventListener('click', gameState.handleClick);
+      gameState.gameOver = true;
+      return result;
     }
   }
+  return result;
+};
 
-  updateGameStatus(lastWinner) {
-    this.moves = 0;
-    this.gameOver = true;
-    this.lastWinner = lastWinner;
+const checkForTie = () => {
+  if (gameState.moves >= 9 && !gameState.gameOver) {
+    gameState.gameOver = true;
+    gameState.moves = 0;
+    game.removeEventListener('click', gameState.handleClick);
+    stateOfGame.textContent = 'TIE GAME';
+  }
+};
 
-    if (this.lastWinner === 'X') {
-      this.exesWins++;
-      exesWins.textContent = this.exesWins + ' ';
+const handleClick = (e) => {
+  e.target.style.outline = 'none';
+  if (e.target.className === 'reset') {
+    resetGame();
+  }
+  if (e.target.textContent === '..') {
+    e.target.textContent = gameState.currentTurn === true ? 'O' : 'X';
+
+    if (gameState.currentTurn) {
+      gameState.ohs[e.target.id] = e.target.id;
     } else {
-      this.ohsWins++;
-      ohsWins.textContent = this.ohsWins + ' ';
+      gameState.exes[e.target.id] = e.target.id;
     }
-    stateOfGame.textContent = `${this.lastWinner} WINS!!`;
+    gameState.moves++;
+    gameState.currentTurn = !gameState.currentTurn;
+  }
+  if (checkForWin()) {
+    updateGameStatus(e.target.textContent);
+  }
+  checkForTie();
+};
+
+const updateGameStatus = (lastWinner) => {
+  gameState.moves = 0;
+  gameState.gameOver = true;
+  gameState.lastWinner = lastWinner;
+
+  if (gameState.lastWinner === 'X') {
+    gameState.exesWins++;
+    exesWins.textContent = gameState.exesWins + ' ';
+  } else {
+    gameState.ohsWins++;
+    ohsWins.textContent = gameState.ohsWins + ' ';
   }
 
-  reset(e) {
-    e.target.style.outline = 'none';
+  stateOfGame.textContent = `${gameState.lastWinner} WINS!!`;
+};
 
-    for (let square of squares) {
-      square.textContent = '..';
-    }
-    this.exes = {};
-    this.ohs = {};
-
-    if (this.gameOver) {
-      this.gameOver = false;
-      stateOfGame.textContent = 'Game In Progress';
-      this.currentTurn = this.lastWinner === 'X' ? false : true;
-      turn.textContent = this.currentTurn === true ? 'O' : 'X';
-      game.addEventListener('click', this.handleClick);
-    }
+const resetGame = (e) => {
+  for (let square of squares) {
+    square.textContent = '..';
   }
-}
+  gameState.exes = {};
+  gameState.ohs = {};
 
-let TicTacToe = new Board();
+  if (gameState.gameOver) {
+    gameState.gameOver = false;
+    stateOfGame.textContent = 'Game In Progress';
+    gameState.currentTurn = gameState.lastWinner === 'X' ? false : true;
+    turn.textContent = gameState.currentTurn === true ? 'O' : 'X';
+    game.addEventListener('click', gameState.handleClick);
+  }
+};
 
-game.addEventListener('click', TicTacToe.handleClick);
-reset.addEventListener('click', TicTacToe.reset);
-//
+game.addEventListener('click', handleClick);
+reset.addEventListener('click', handleClick);
