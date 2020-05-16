@@ -1,0 +1,64 @@
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background: rgb(244, 223, 170);
+}
+
+h1 {
+  font-family: arial, sans-serif;
+  font-size: 3rem;
+  margin-bottom: 0;
+}
+#status {
+  margin-bottom: 0;
+}
+
+.board {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 21rem;
+  height: 21rem;
+}
+
+.playerSquare {
+  color: lightgrey;
+  text-shadow: -1px -1px 1px #555, 1px -1px 1px #555, -1px 1px 1px #555,
+    3px 3px 3px #000;
+  margin: 0;
+  padding: 0;
+  width: 7rem;
+  height: 7rem;
+  font-size: 5rem;
+  outline: none;
+  border: 2px solid black;
+  background: rgb(227, 176, 176);
+  background: radial-gradient(
+    circle,
+    rgba(227, 176, 176, 1) 11%,
+    rgba(108, 120, 233, 1) 85%
+  );
+}
+
+.reset {
+  background: rgb(108, 120, 233);
+  border-radius: 5px;
+  border: 1px solid #222;
+  width: 10rem;
+  height: 3rem;
+  font-size: 1.5rem;
+  color: lightgrey;
+  text-shadow: -1px -1px 1px #222, 1px -1px 1px #222, -1px 1px 1px #222,
+    1px 1px 1px #000;
+  box-shadow: 2px 2px 3px grey;
+}
+
+.reset:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}

@@ -62,8 +62,12 @@ const handleClick = (e) => {
   if (e.target.className === 'reset') {
     resetGame();
   }
-  if (e.target.textContent === '..') {
+  if (gameState.gameOver) {
+    return;
+  }
+  if (e.target.textContent === '') {
     e.target.textContent = gameState.currentTurn === true ? 'O' : 'X';
+    turn.textContent = gameState.currentTurn === false ? 'O' : 'X';
 
     if (gameState.currentTurn) {
       gameState.ohs[e.target.id] = e.target.id;
@@ -75,6 +79,8 @@ const handleClick = (e) => {
   }
   if (checkForWin()) {
     updateGameStatus(e.target.textContent);
+    gameState.moves = 0;
+    return;
   }
   checkForTie();
 };
@@ -97,7 +103,7 @@ const updateGameStatus = (lastWinner) => {
 
 const resetGame = (e) => {
   for (let square of squares) {
-    square.textContent = '..';
+    square.textContent = '';
   }
   gameState.exes = {};
   gameState.ohs = {};
