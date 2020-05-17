@@ -1,9 +1,25 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v7.0.29,
+* Autoprefixer: v9.7.6
+* Browsers: last 4 version
+*/
+
 body {
   margin: 0;
   height: 100vh;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
   justify-content: flex-start;
   background: rgb(244, 223, 170);
 }
@@ -12,32 +28,111 @@ h1 {
   font-family: arial, sans-serif;
   font-size: 3rem;
   margin-bottom: 0;
+  margin-top: 25px;
 }
+
+.info {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  font-size: 1.5rem;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: baseline;
+  -ms-flex-align: baseline;
+  align-items: baseline;
+  width: 24rem;
+  height: 7rem;
+  margin-bottom: 1.5rem;
+}
+
+h2 {
+  -webkit-box-ordinal-group: 2;
+  -ms-flex-order: 1;
+  order: 1;
+  min-width: 10rem;
+  font-size: 1.3rem;
+  border: 1px solid #555;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+.won {
+  text-shadow: -1px -1px 1px #555, 1px -1px 1px #555, -1px 1px 1px #555,
+    1px 1px 1px #000;
+}
+
+p:first-of-type {
+  color: aqua;
+  -webkit-box-ordinal-group: 3;
+  -ms-flex-order: 2;
+  order: 2;
+  margin: 0;
+}
+
+p:last-of-type {
+  color: lime;
+  -webkit-box-ordinal-group: 5;
+  -ms-flex-order: 4;
+  order: 4;
+}
+
+p {
+  vertical-align: bottom;
+  font-weight: bold;
+  text-shadow: -1px -1px 1px #555, 1px -1px 1px #555, -1px 1px 1px #555,
+    1px 1px 1px #000;
+}
+
+h3 {
+  -webkit-box-ordinal-group: 4;
+  -ms-flex-order: 3;
+  order: 3;
+}
+
+span {
+  text-shadow: -1px -1px 1px #555, 1px -1px 1px #555, -1px 1px 1px #555,
+    1px 1px 1px #000;
+}
+
 #status {
   margin-bottom: 0;
 }
 
 .board {
   margin: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
   justify-content: center;
+  -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: 21rem;
-  height: 21rem;
+  width: 24rem;
+  height: 24rem;
 }
 
 .playerSquare {
-  color: lightgrey;
+  color: #eee;
   text-shadow: -1px -1px 1px #555, 1px -1px 1px #555, -1px 1px 1px #555,
     3px 3px 3px #000;
   margin: 0;
   padding: 0;
-  width: 7rem;
-  height: 7rem;
-  font-size: 5rem;
+  width: 8rem;
+  height: 8rem;
+  font-size: 6rem;
   outline: none;
   border: 2px solid black;
   background: rgb(227, 176, 176);
+  background: -o-radial-gradient(
+    circle,
+    rgba(227, 176, 176, 1) 11%,
+    rgba(108, 120, 233, 1) 85%
+  );
   background: radial-gradient(
     circle,
     rgba(227, 176, 176, 1) 11%,
@@ -52,13 +147,17 @@ h1 {
   width: 10rem;
   height: 3rem;
   font-size: 1.5rem;
-  color: lightgrey;
+  color: #eee;
   text-shadow: -1px -1px 1px #222, 1px -1px 1px #222, -1px 1px 1px #222,
     1px 1px 1px #000;
+  -webkit-box-shadow: 2px 2px 3px grey;
   box-shadow: 2px 2px 3px grey;
 }
 
 .reset:active {
-  transform: translate(2px, 2px);
+  -webkit-transform: translate(2px, 1px);
+  -ms-transform: translate(2px, 1px);
+  transform: translate(2px, 1px);
+  -webkit-box-shadow: none;
   box-shadow: none;
 }

@@ -13,7 +13,7 @@ const gameState = {
   ohs: {},
   exesWins: 0,
   ohsWins: 0,
-  gamegameOver: false,
+  gameOver: false,
   currentTurn: false,
   lastWinner: 'X',
   solutions: [
@@ -42,6 +42,7 @@ const checkForWin = () => {
     if (result) {
       game.removeEventListener('click', gameState.handleClick);
       gameState.gameOver = true;
+      turn.style.color = gameState.currentTurn === true ? 'aqua' : 'lime';
       return result;
     }
   }
@@ -53,13 +54,14 @@ const checkForTie = () => {
     gameState.gameOver = true;
     gameState.moves = 0;
     game.removeEventListener('click', gameState.handleClick);
-    stateOfGame.textContent = 'TIE GAME';
+    stateOfGame.textContent = `TIE GAME`;
   }
 };
 
 const handleClick = (e) => {
   e.target.style.outline = 'none';
   if (e.target.className === 'reset') {
+    turnIndicator.style.visibility = 'visible';
     resetGame();
   }
   if (gameState.gameOver) {
@@ -68,6 +70,7 @@ const handleClick = (e) => {
   if (e.target.textContent === '') {
     e.target.textContent = gameState.currentTurn === true ? 'O' : 'X';
     turn.textContent = gameState.currentTurn === false ? 'O' : 'X';
+    turn.style.color = !gameState.currentTurn ? 'lime' : 'aqua';
 
     if (gameState.currentTurn) {
       gameState.ohs[e.target.id] = e.target.id;
@@ -99,9 +102,15 @@ const updateGameStatus = (lastWinner) => {
   }
 
   stateOfGame.textContent = `${gameState.lastWinner} WINS!!`;
+  stateOfGame.classList.add('won');
+  if (gameState.gameOver) {
+    turnIndicator.style.visibility = 'hidden';
+  }
+  stateOfGame.style.color = gameState.currentTurn ? 'aqua' : 'lime';
 };
 
 const resetGame = (e) => {
+  stateOfGame.classList.remove('won');
   for (let square of squares) {
     square.textContent = '';
   }
@@ -111,11 +120,13 @@ const resetGame = (e) => {
   if (gameState.gameOver) {
     gameState.gameOver = false;
     stateOfGame.textContent = 'Game In Progress';
+    stateOfGame.style.color = 'black';
     gameState.currentTurn = gameState.lastWinner === 'X' ? false : true;
     turn.textContent = gameState.currentTurn === true ? 'O' : 'X';
     game.addEventListener('click', gameState.handleClick);
   }
 };
 
+turn.style.color = 'aqua';
 game.addEventListener('click', handleClick);
 reset.addEventListener('click', handleClick);

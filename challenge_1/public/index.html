@@ -11,8 +11,13 @@
 
   <body>
     <h1>Tic Tac Toe</h1>
-    <h2 id="status">Game In Progress!</h2>
-    <h3><span>X</span>'s Turn</h3>
+    <div class="info">
+      <h2 id="status">Game In Progress!</h2>
+      <h3><span>X</span>'s Turn</h3>
+      <p>X has <span id="exesWins">0 </span>wins!</p>
+      <p>O has <span id="ohsWins">0 </span>wins!</p>
+    </div>
+
     <div class="board">
       <button id="1" class="playerSquare"></button>
 
@@ -38,8 +43,7 @@
     </div>
     <br />
     <button class="reset">New Game ?</button>
-    <p>X has <span id="exesWins">0 </span>wins!</p>
-    <p>O has <span id="ohsWins">0 </span>wins!</p>
+
     <script src="./app.js"></script>
   </body>
 </html>
