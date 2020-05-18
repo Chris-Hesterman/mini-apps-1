@@ -119,7 +119,7 @@ const resetGame = (e) => {
   }
   gameState.exes = {};
   gameState.ohs = {};
-
+  gameState.moves = 0;
   if (gameState.gameOver) {
     gameState.gameOver = false;
     stateOfGame.textContent = 'Game In Progress';
