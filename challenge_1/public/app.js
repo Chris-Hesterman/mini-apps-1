@@ -55,6 +55,9 @@ const checkForTie = () => {
     gameState.moves = 0;
     game.removeEventListener('click', gameState.handleClick);
     stateOfGame.textContent = `TIE GAME`;
+    if (gameState.gameOver) {
+      turnIndicator.style.visibility = 'hidden';
+    }
   }
 };
 
