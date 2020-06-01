@@ -4,7 +4,6 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "build": "npx babel --presets @babel/preset-react client --watch --out-dir public",
     "dev": "npx nodemon server.js --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
@@ -20,9 +19,5 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   },
-  "devDependencies": {
-    "@babel/preset-react": "^7.10.1",
-    "@babel/cli": "^7.10.1",
-    "@babel/core": "^7.10.2"
-  }
+  "devDependencies": {}
 }
