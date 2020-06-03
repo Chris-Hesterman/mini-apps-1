@@ -1,10 +1,11 @@
 const express = require('express');
 const app = express();
-const mongoose = require('mongoose');
+const db = require('./database/index.js');
+const path = require('path');
 const bodyParser = require('body-parser');
 const PORT = 3000;
 
-app.use(express.static('/public/index.html'));
+app.use(express.static(path.join(__dirname, './public')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -13,9 +14,11 @@ app.get('/', (req, res) => {
   res.end();
 });
 
-app.post('/', (req, res) => {
-  console.log(req);
-  res.send('shooby doo');
+app.post('/post', (req, res) => {
+  let document = req.body;
+
+  db.addPurchase(document);
+  res.send('updated document');
   res.end();
 });
 

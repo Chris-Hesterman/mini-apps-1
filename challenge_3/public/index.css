@@ -1,0 +1,76 @@
+body {
+  background: lightblue;
+}
+
+#app {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 3rem;
+  width: 70vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+button {
+  font-size: 2rem;
+  border-radius: 5px;
+  background: lightgreen;
+  box-shadow: 2px 2px 3px gray;
+  outline: none;
+  transition: all;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+button:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+input {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  width: 15vw;
+}
+
+table {
+  width: 20vw;
+  border: 1px solid black;
+  background: lightgrey;
+}
+tr {
+  height: 1.5rem;
+  background: lightgoldenrodyellow;
+}
+
+th {
+  text-align: left;
+  width: 5vw;
+}
+
+th,
+td {
+  border: 1px solid black;
+}
+
+tr:nth-child(odd) {
+  background: pink;
+}
+
+.confirm {
+  margin-top: 2rem;
+}

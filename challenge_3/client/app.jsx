@@ -2,27 +2,78 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentForm: 'F3'
+      currentForm: '',
+      name: '',
+      email: '',
+      password: '',
+      address1: '',
+      address2: '',
+      city: '',
+      state: '',
+      zip: '',
+      tel: '',
+      cardNum: '',
+      expDate: '',
+      cvv: '',
+      billingZIP: ''
     };
+    this.handleClick = this.handleClick.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.postOrder = this.postOrder.bind(this);
+  }
+
+  // handleClick(data) {
+  //   console.log('updating');
+  //   this.setState(data);
+  // }
+
+  handleClick(e, data) {
+    if (!data) {
+      this.setState({ currentForm: 'F1' });
+    } else {
+      this.setState(data);
+    }
+  }
+
+  postOrder(e) {
+    let data = {};
+    for (let item in this.state) {
+      if (item !== 'currentForm') {
+        data[item] = this.state[item];
+      }
+    }
+    fetch('http://127.0.0.1:3000/post', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((response) => {
+        console.log('got it');
+        console.log('yippee');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   render() {
     let currentForm = this.state.currentForm;
     let formComponent = !currentForm ? (
-      ''
+      <button name="checkout" className="checkout" onClick={this.handleClick}>
+        Checkout
+      </button>
     ) : currentForm === 'F1' ? (
-      <F1 />
+      <F1 handleClick={this.handleClick} />
     ) : currentForm === 'F2' ? (
-      <F2 />
+      <F2 handleClick={this.handleClick} />
+    ) : currentForm === 'F3' ? (
+      <F3 handleClick={this.handleClick} />
     ) : (
-      <F3 />
+      <Confirm data={this.state} sendData={this.postOrder} />
     );
-    return (
-      <div>
-        <button>Checkout</button>
-        <div>{formComponent}</div>
-      </div>
-    );
+    return <div>{formComponent}</div>;
   }
 }
 
@@ -30,22 +81,28 @@ class F1 extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      nextForm: 'F2',
+      currentForm: 'F2',
       name: '',
       email: '',
       password: ''
     };
     this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
 
+  handleSubmit(e) {
+    e.preventDefault();
+    this.props.handleClick(e, this.state);
+  }
+
   render() {
     return (
       <div>
-        <form>
+        <form onSubmit={this.handleSubmit}>
           <input
             type="text"
             name="name"
@@ -71,7 +128,7 @@ class F1 extends React.Component {
             onChange={this.handleChange}
             required
           />
-          <button>Next</button>
+          <input type="submit" value="Next" />
         </form>
       </div>
     );
@@ -82,18 +139,25 @@ class F2 extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      currentForm: 'F3',
       address1: '',
       address2: '',
       city: '',
       state: '',
       zip: '',
-      phone: ''
+      tel: ''
     };
     this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange(e) {
     this.setState({ [e.target.name]: e.target.value });
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    this.props.handleClick(e, this.state);
   }
 
   render() {
@@ -137,7 +201,7 @@ class F2 extends React.Component {
             onChange={this.handleChange}
             placeholder="Phone #"
           />
-          <button>Next</button>
+          <input type="submit" value="Next" />
         </form>
       </div>
     );
@@ -148,22 +212,29 @@ class F3 extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      currentForm: 'Confirm',
       cardNum: '',
       expDate: '',
       cvv: '',
       billingZIP: ''
     };
     this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
 
+  handleSubmit(e) {
+    e.preventDefault();
+    this.props.handleClick(e, this.state);
+  }
+
   render() {
     return (
       <div>
-        <form>
+        <form onSubmit={this.handleSubmit}>
           <input
             type="text"
             name="cardNum"
@@ -192,8 +263,49 @@ class F3 extends React.Component {
             onChange={this.handleChange}
             placeholder="Billing ZIP"
           />
-          <button>Next</button>
+          <input type="submit" value="Next" />
         </form>
+      </div>
+    );
+  }
+}
+
+class Confirm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(e) {
+    this.props.sendData();
+  }
+
+  render() {
+    let tableElements = [];
+    for (let item in this.props.data) {
+      if (item !== 'currentForm' && item !== 'password') {
+        tableElements.push(
+          <tr key={Math.random()}>
+            <th>{item}</th>
+            <td>{this.props.data[item]}</td>
+          </tr>
+        );
+      }
+    }
+    return (
+      <div className="main">
+        <h1>Confirm your Order</h1>
+
+        <h2>
+          <strong>PLEASE REVIEW YOUR ORDER INFO</strong>
+        </h2>
+
+        <table>
+          <tbody>{tableElements}</tbody>
+        </table>
+        <button className="confirm" onClick={this.handleClick}>
+          Place Order
+        </button>
       </div>
     );
   }
