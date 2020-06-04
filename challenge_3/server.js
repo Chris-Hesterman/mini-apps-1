@@ -17,9 +17,16 @@ app.get('/', (req, res) => {
 app.post('/post', (req, res) => {
   let document = req.body;
 
-  db.addPurchase(document);
-  res.send('updated document');
-  res.end();
+  db.addPurchase(document)
+    .then((result) => {
+      console.log(result);
+      return result.insertedId;
+    })
+    .then((id) => {
+      res.type('json');
+      res.send(JSON.stringify({ new: id }));
+      res.end();
+    });
 });
 
 app.listen(3000, (err) => {

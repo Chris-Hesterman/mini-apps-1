@@ -2,6 +2,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      currentDocId: '',
       currentForm: '',
       name: '',
       email: '',
@@ -22,13 +23,9 @@ class App extends React.Component {
     this.postOrder = this.postOrder.bind(this);
   }
 
-  // handleClick(data) {
-  //   console.log('updating');
-  //   this.setState(data);
-  // }
-
   handleClick(e, data) {
     if (!data) {
+      this.postOrder(e);
       this.setState({ currentForm: 'F1' });
     } else {
       this.setState(data);
@@ -38,7 +35,7 @@ class App extends React.Component {
   postOrder(e) {
     let data = {};
     for (let item in this.state) {
-      if (item !== 'currentForm') {
+      if (item !== 'currentForm' && item !== 'currentDocId') {
         data[item] = this.state[item];
       }
     }
@@ -50,8 +47,11 @@ class App extends React.Component {
       }
     })
       .then((response) => {
-        console.log('got it');
-        console.log('yippee');
+        return response.json();
+      })
+      .then((data) => {
+        console.log(typeof data.new);
+        this.setState({ currentDocId: data.new });
       })
       .catch((err) => {
         console.log(err);

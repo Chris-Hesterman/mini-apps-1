@@ -26,12 +26,14 @@ connection
     let Purchases = mongoose.model('Purchase', purchaseSchema);
 
     const addPurchase = (document) => {
-      Purchases.collection.insertOne(document, (err, result) => {
-        if (err) {
-          console.log(err);
-          return;
-        }
-        console.log('transaction added');
+      return new Promise((resolve, reject) => {
+        Purchases.collection.insertOne(document, (err, result) => {
+          if (err) {
+            console.log(err);
+            reject(err);
+          }
+          resolve(result);
+        });
       });
     };
     module.exports.addPurchase = addPurchase;
