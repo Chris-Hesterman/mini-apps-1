@@ -36,7 +36,7 @@ class App extends React.Component {
   postOrder(e) {
     let data = {};
     for (let item in this.state) {
-      if (item !== 'currentForm' && item !== 'currentDocId') {
+      if (item !== 'currentForm') {
         data[item] = this.state[item];
       }
     }

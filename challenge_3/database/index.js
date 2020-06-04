@@ -25,9 +25,9 @@ connection
 
     let Purchases = mongoose.model('Purchase', purchaseSchema);
 
-    const addPurchase = (document) => {
+    const addPurchase = (document, id) => {
       return new Promise((resolve, reject) => {
-        Purchases.collection.insertOne(document, (err, result) => {
+        Purchases.collection.updateOne(document, (err, result) => {
           if (err) {
             console.log(err);
             reject(err);

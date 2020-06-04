@@ -16,8 +16,10 @@ app.get('/', (req, res) => {
 
 app.post('/post', (req, res) => {
   let document = req.body;
+  let id = document.currentDocId;
+  delete document.currentDocId;
 
-  db.addPurchase(document)
+  db.addPurchase(document, id)
     .then((result) => {
       console.log(result);
       return result.insertedId;
