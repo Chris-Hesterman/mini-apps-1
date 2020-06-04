@@ -17,17 +17,25 @@ app.get('/', (req, res) => {
 app.post('/post', (req, res) => {
   let document = req.body;
   let id = document.currentDocId;
+  console.log(id);
   delete document.currentDocId;
 
   db.addPurchase(document, id)
     .then((result) => {
       console.log(result);
-      return result.insertedId;
+      return result;
     })
-    .then((id) => {
+    .then((result) => {
+      // let id = {};
+      // if (result.upsertedId) {
+      //   id = { new: _id };
+      // }
       res.type('json');
-      res.send(JSON.stringify({ new: id }));
+      res.send(JSON.stringify(id));
       res.end();
+    })
+    .catch((err) => {
+      console.log(err);
     });
 });
 

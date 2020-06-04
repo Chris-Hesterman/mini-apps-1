@@ -26,14 +26,22 @@ connection
     let Purchases = mongoose.model('Purchase', purchaseSchema);
 
     const addPurchase = (document, id) => {
+      console.log('database id: ', id);
+      // let filter = { document };
+      // let options = { new: true, upsert: true };
+
       return new Promise((resolve, reject) => {
-        Purchases.collection.updateOne(document, (err, result) => {
-          if (err) {
-            console.log(err);
-            reject(err);
-          }
-          resolve(result);
-        });
+        // Purchases.collection.updateOne(
+        //   filter,
+        //   { $set: document },
+        //   options,
+        //   (err, result) => {
+        //     if (err) {
+        //       reject(err);
+        //     }
+        //     resolve(result);
+        //   }
+        // );
       });
     };
     module.exports.addPurchase = addPurchase;
