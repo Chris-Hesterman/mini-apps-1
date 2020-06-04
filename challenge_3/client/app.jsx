@@ -1,26 +1,27 @@
+const initialState = {
+  currentDocId: '',
+  currentForm: '',
+  name: '',
+  email: '',
+  password: '',
+  address1: '',
+  address2: '',
+  city: '',
+  state: '',
+  zip: '',
+  tel: '',
+  cardNum: '',
+  expDate: '',
+  cvv: '',
+  billingZIP: ''
+};
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      currentDocId: '',
-      currentForm: '',
-      name: '',
-      email: '',
-      password: '',
-      address1: '',
-      address2: '',
-      city: '',
-      state: '',
-      zip: '',
-      tel: '',
-      cardNum: '',
-      expDate: '',
-      cvv: '',
-      billingZIP: ''
-    };
-    this.handleClick = this.handleClick.bind(this);
+    this.state = initialState;
     this.handleClick = this.handleClick.bind(this);
     this.postOrder = this.postOrder.bind(this);
+    this.reset = this.reset.bind(this);
   }
 
   handleClick(e, data) {
@@ -58,6 +59,10 @@ class App extends React.Component {
       });
   }
 
+  reset() {
+    this.setState(initialState);
+  }
+
   render() {
     let currentForm = this.state.currentForm;
     let formComponent = !currentForm ? (
@@ -71,7 +76,7 @@ class App extends React.Component {
     ) : currentForm === 'F3' ? (
       <F3 handleClick={this.handleClick} />
     ) : (
-      <Confirm data={this.state} sendData={this.postOrder} />
+      <Confirm data={this.state} reset={this.reset} />
     );
     return <div>{formComponent}</div>;
   }
@@ -277,7 +282,7 @@ class Confirm extends React.Component {
   }
 
   handleClick(e) {
-    this.props.sendData();
+    this.props.reset();
   }
 
   render() {
