@@ -30,19 +30,25 @@ class App extends React.Component {
       this.setState({ currentForm: 'F1' });
     } else {
       this.setState(data);
+      this.postOrder(e, data);
     }
   }
 
-  postOrder(e) {
-    let data = {};
-    for (let item in this.state) {
-      if (item !== 'currentForm') {
-        data[item] = this.state[item];
-      }
+  postOrder(e, data) {
+    console.log('sending');
+    let payload = this.state;
+    console.log('theres data', data);
+    if (data) {
+      delete data.currentForm;
+      data.currentDocId = this.state.currentDocId;
+      payload = data;
+    } else {
+      delete payload.currentForm;
     }
+
     fetch('http://127.0.0.1:3000/post', {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: JSON.stringify(payload),
       headers: {
         'Content-Type': 'application/json'
       }
@@ -51,7 +57,6 @@ class App extends React.Component {
         return response.json();
       })
       .then((data) => {
-        console.log(typeof data.new);
         this.setState({ currentDocId: data.new });
       })
       .catch((err) => {
@@ -59,7 +64,10 @@ class App extends React.Component {
       });
   }
 
-  reset() {
+  reset(e) {
+    this.setState(initialState);
+  }
+  componentDidMount(e) {
     this.setState(initialState);
   }
 
@@ -76,7 +84,7 @@ class App extends React.Component {
     ) : currentForm === 'F3' ? (
       <F3 handleClick={this.handleClick} />
     ) : (
-      <Confirm data={this.state} reset={this.reset} />
+      <Confirm data={this.state} onClick={this.reset} />
     );
     return <div>{formComponent}</div>;
   }

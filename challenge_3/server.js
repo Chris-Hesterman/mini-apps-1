@@ -16,22 +16,21 @@ app.get('/', (req, res) => {
 
 app.post('/post', (req, res) => {
   let document = req.body;
+  console.log('document from front end: ', document);
   let id = document.currentDocId;
-  console.log(id);
   delete document.currentDocId;
 
   db.addPurchase(document, id)
     .then((result) => {
+      let response = { new: id };
       console.log(result);
-      return result;
-    })
-    .then((result) => {
-      // let id = {};
-      // if (result.upsertedId) {
-      //   id = { new: _id };
-      // }
+      if (result.ops) {
+        response = { new: result.ops[0]._id };
+      }
       res.type('json');
-      res.send(JSON.stringify(id));
+      res.send(response);
+    })
+    .then(() => {
       res.end();
     })
     .catch((err) => {

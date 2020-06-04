@@ -26,11 +26,34 @@ connection
     let Purchases = mongoose.model('Purchase', purchaseSchema);
 
     const addPurchase = (document, id) => {
-      console.log('database id: ', id);
-      // let filter = { document };
-      // let options = { new: true, upsert: true };
+      if (id) {
+        let filter = { _id: id };
+        return new Promise((resolve, reject) => {
+          Purchases.findOneAndUpdate(filter, { document }, (err, result) => {
+            if (err) {
+              reject(err);
+            }
+            resolve(result);
+          });
+        });
+      } else {
+        return new Promise((resolve, reject) => {
+          Purchases.collection.save(document, (err, result) => {
+            if (err) {
+              reject(err);
+            }
+            resolve(result);
+          });
+        });
+      }
 
       return new Promise((resolve, reject) => {
+        Purchases.update(filter, document, options, (err, result) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(result);
+        });
         // Purchases.collection.updateOne(
         //   filter,
         //   { $set: document },
