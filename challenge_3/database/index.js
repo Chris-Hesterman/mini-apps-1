@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const connection = mongoose.connect('mongodb://localhost/checkout', {
-  useNewUrlParser: true
+  useNewUrlParser: true,
+  useUnifiedTopology: true
 });
 
 connection
@@ -26,19 +27,25 @@ connection
     let Purchases = mongoose.model('Purchase', purchaseSchema);
 
     const addPurchase = (document, id) => {
+      console.log('document from front end: ', document);
+      console.log('id from front end: ', id);
       if (id) {
-        let filter = { _id: id };
         return new Promise((resolve, reject) => {
-          Purchases.findOneAndUpdate(filter, { document }, (err, result) => {
-            if (err) {
-              reject(err);
+          Purchases.updateOne(
+            { _id: id },
+            { $set: document },
+            { new: true, upsert: true },
+            (err, result) => {
+              if (err) {
+                reject(err);
+              }
+              resolve(result);
             }
-            resolve(result);
-          });
+          );
         });
       } else {
         return new Promise((resolve, reject) => {
-          Purchases.collection.save(document, (err, result) => {
+          Purchases.collection.insertOne(document, (err, result) => {
             if (err) {
               reject(err);
             }
@@ -46,27 +53,8 @@ connection
           });
         });
       }
-
-      return new Promise((resolve, reject) => {
-        Purchases.update(filter, document, options, (err, result) => {
-          if (err) {
-            reject(err);
-          }
-          resolve(result);
-        });
-        // Purchases.collection.updateOne(
-        //   filter,
-        //   { $set: document },
-        //   options,
-        //   (err, result) => {
-        //     if (err) {
-        //       reject(err);
-        //     }
-        //     resolve(result);
-        //   }
-        // );
-      });
     };
+
     module.exports.addPurchase = addPurchase;
   })
   .catch((err) => {

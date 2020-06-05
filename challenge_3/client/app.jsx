@@ -1,24 +1,23 @@
-const initialState = {
-  currentDocId: '',
-  currentForm: '',
-  name: '',
-  email: '',
-  password: '',
-  address1: '',
-  address2: '',
-  city: '',
-  state: '',
-  zip: '',
-  tel: '',
-  cardNum: '',
-  expDate: '',
-  cvv: '',
-  billingZIP: ''
-};
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = initialState;
+    this.state = {
+      currentDocId: '',
+      currentForm: '',
+      name: '',
+      email: '',
+      password: '',
+      address1: '',
+      address2: '',
+      city: '',
+      state: '',
+      zip: '',
+      tel: '',
+      cardNum: '',
+      expDate: '',
+      cvv: '',
+      billingZIP: ''
+    };
     this.handleClick = this.handleClick.bind(this);
     this.postOrder = this.postOrder.bind(this);
     this.reset = this.reset.bind(this);
@@ -29,8 +28,7 @@ class App extends React.Component {
       this.postOrder(e);
       this.setState({ currentForm: 'F1' });
     } else {
-      this.setState(data);
-      this.postOrder(e, data);
+      this.setState({ currentForm: data.currentForm }, this.postOrder(e, data));
     }
   }
 
@@ -42,6 +40,7 @@ class App extends React.Component {
       delete data.currentForm;
       data.currentDocId = this.state.currentDocId;
       payload = data;
+      this.setState(data);
     } else {
       delete payload.currentForm;
     }
@@ -64,11 +63,13 @@ class App extends React.Component {
       });
   }
 
-  reset(e) {
-    this.setState(initialState);
-  }
-  componentDidMount(e) {
-    this.setState(initialState);
+  reset() {
+    let stateObj = this.state;
+
+    for (let item in stateObj) {
+      stateObj[item] = '';
+    }
+    this.setState(stateObj);
   }
 
   render() {
@@ -84,7 +85,7 @@ class App extends React.Component {
     ) : currentForm === 'F3' ? (
       <F3 handleClick={this.handleClick} />
     ) : (
-      <Confirm data={this.state} onClick={this.reset} />
+      <Confirm data={this.state} reset={this.reset} />
     );
     return <div>{formComponent}</div>;
   }
@@ -296,7 +297,11 @@ class Confirm extends React.Component {
   render() {
     let tableElements = [];
     for (let item in this.props.data) {
-      if (item !== 'currentForm' && item !== 'password') {
+      if (
+        item !== 'currentForm' &&
+        item !== 'password' &&
+        item !== 'currentDocId'
+      ) {
         tableElements.push(
           <tr key={Math.random()}>
             <th>{item}</th>
@@ -317,7 +322,7 @@ class Confirm extends React.Component {
           <tbody>{tableElements}</tbody>
         </table>
         <button className="confirm" onClick={this.handleClick}>
-          Place Order
+          Purchase
         </button>
       </div>
     );
