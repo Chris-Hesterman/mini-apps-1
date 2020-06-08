@@ -3,15 +3,16 @@ const app = express();
 const bodyParser = require('body-parser');
 const PORT = 3000;
 
+app.use(express.static(__dirname + '/client/dist'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.get('/', (req, res) => {
+app.get('/ham', (req, res) => {
   res.send('GET req. received');
   res.end();
 });
 
-app.post('/', (req, res) => {
+app.post('/ham', (req, res) => {
   res.send('POST req. received');
   res.end();
 });
