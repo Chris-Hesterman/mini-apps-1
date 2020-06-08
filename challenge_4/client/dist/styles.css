@@ -1,0 +1,39 @@
+body {
+  background: lightblue;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  text-align: center;
+}
+
+.board {
+  display: flex;
+  flex-wrap: wrap;
+  border: 5px solid yellow;
+  background: blue;
+  width: 49rem;
+  height: 42rem;
+}
+
+.square {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  width: 7rem;
+  height: 7rem;
+  /* background: rgb(247, 247, 105); */
+  background: #00f;
+  border: 5px solid yellow;
+}
+
+.circle {
+  width: 5rem;
+  height: 5rem;
+  background: lightblue;
+  border-radius: 50px;
+  border: 2px solid black;
+}
