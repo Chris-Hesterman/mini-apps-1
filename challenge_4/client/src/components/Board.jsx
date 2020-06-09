@@ -4,11 +4,18 @@ import Square from './Square.jsx';
 var Board = (props) => {
   let newBoard = [];
   let key = -1;
-  for (let x = 0; x < props.board.length; x++) {
-    let newRow = props.board[x].map((square, index) => {
-      let squareInfo = { x: x, y: index, player: props.board[x][index] };
+  for (let y = 0; y < props.board.length; y++) {
+    let newRow = props.board[y].map((square, index) => {
       key++;
-      return <Square info={squareInfo} key={key} />;
+      return (
+        <Square
+          x={index}
+          y={y}
+          key={key}
+          player={props.board[y][index]}
+          placePiece={props.placePiece}
+        />
+      );
     });
     newBoard.push(newRow);
   }

@@ -16,6 +16,7 @@ h1 {
   background: blue;
   width: 49rem;
   height: 42rem;
+  border-radius: 10px;
 }
 
 .square {
@@ -33,7 +34,18 @@ h1 {
 .circle {
   width: 5rem;
   height: 5rem;
-  background: lightblue;
   border-radius: 50px;
-  border: 2px solid black;
+  border: 2px solid orange;
+}
+
+.empty {
+  background: lightblue;
+}
+
+.X {
+  background: red;
+}
+
+.Y {
+  background: black;
 }
