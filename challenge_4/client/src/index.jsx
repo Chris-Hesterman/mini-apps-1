@@ -11,17 +11,24 @@ class App extends React.Component {
       turnsTaken: 0
     };
     this.placePiece = this.placePiece.bind(this);
+    this.checkHorizontalWin = this.checkHorizontalWin.bind(this);
+    this.checkVerticalWin = this.checkVerticalWin.bind(this);
   }
 
   placePiece(e) {
     const currentPlayer = this.state.currentPlayer;
     const player = e.currentTarget.getAttribute('player');
-    const column = e.currentTarget.getAttribute('x');
-    const row = e.currentTarget.getAttribute('y');
+    let column = +e.currentTarget.getAttribute('x');
+    let row = +e.currentTarget.getAttribute('y');
     let board = this.state.board;
+    while (row + 1 < board.length && board[row + 1][column] === '-') {
+      row += 1;
+    }
 
     if (player !== 'X' && player !== 'Y') {
       board[row][column] = this.state.currentPlayer;
+      this.checkHorizontalWin(board, row);
+      this.checkVerticalWin(board, column);
       this.setState((prevState) => {
         board = prevState.board;
         board[row][column] = prevState.currentPlayer;
@@ -31,6 +38,26 @@ class App extends React.Component {
           turnsTaken: prevState.turnsTaken + 1
         };
       });
+    }
+  }
+
+  checkVerticalWin(board, column) {
+    console.log(board, column);
+    let playerWinString = '';
+    for (let row of board) {
+      let pieceOrBlank = row[column];
+      playerWinString += pieceOrBlank;
+    }
+    if (playerWinString.includes('XXXX') || playerWinString.includes('YYYY')) {
+      console.log(this.state.currentPlayer, ' Wins!');
+    }
+  }
+
+  checkHorizontalWin(board, row) {
+    let playerWinString = board[row].join('');
+
+    if (playerWinString.includes('XXXX') || playerWinString.includes('YYYY')) {
+      console.log(this.state.currentPlayer, ' Wins!');
     }
   }
 
