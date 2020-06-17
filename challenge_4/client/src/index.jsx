@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Board from './components/Board.jsx';
+import checkForWin from './utils/checkForWin.js';
 
 class App extends React.Component {
   constructor(props) {
@@ -8,13 +9,10 @@ class App extends React.Component {
     this.state = {
       board: [],
       currentPlayer: 'X',
-      turnsTaken: 0
+      turnsTaken: 0,
+      end: false
     };
     this.placePiece = this.placePiece.bind(this);
-    this.checkHorizontalWin = this.checkHorizontalWin.bind(this);
-    this.checkVerticalWin = this.checkVerticalWin.bind(this);
-    this.checkDiagonalDescWin = this.checkDiagonalDescWin.bind(this);
-    this.checkDiagonalAscWin = this.checkDiagonalAscWin.bind(this);
   }
 
   placePiece(e) {
@@ -29,80 +27,39 @@ class App extends React.Component {
     }
     if (player !== 'X' && player !== 'Y') {
       board[row][column] = this.state.currentPlayer;
-      this.checkDiagonalDescWin(board, row, column);
-      this.checkDiagonalAscWin(board, row, column);
-      this.checkHorizontalWin(board, row);
-      this.checkVerticalWin(board, column);
 
-      this.setState((prevState) => {
-        board = prevState.board;
-        board[row][column] = prevState.currentPlayer;
-        return {
-          board: board,
-          currentPlayer: currentPlayer === 'X' ? 'Y' : 'X',
-          turnsTaken: prevState.turnsTaken + 1
-        };
-      });
+      const diagonalD = checkForWin.checkDiagonalDescWin(board, row, column);
+      const diagonalA = checkForWin.checkDiagonalAscWin(board, row, column);
+      const horizontal = checkForWin.checkHorizontalWin(board, row, column);
+      const vertical = checkForWin.checkVerticalWin(board, row, column);
+      const tie = checkForWin.checkTie(this.state.turnsTaken);
+      const checks = [diagonalD, diagonalA, horizontal, vertical, tie];
+
+      for (let check of checks) {
+        if (check !== undefined) {
+          this.setState({ end: true });
+        }
+      }
+
+      if (this.state.end) {
+        return;
+      } else {
+        this.setState((prevState) => {
+          board = prevState.board;
+          board[row][column] = prevState.currentPlayer;
+          return {
+            board: board,
+            currentPlayer: currentPlayer === 'X' ? 'Y' : 'X',
+            turnsTaken: prevState.turnsTaken + 1
+          };
+        });
+      }
     }
   }
 
-  checkVerticalWin(board, col) {
-    let playerWinString = '';
-    for (let row of board) {
-      let pieceOrBlank = row[col];
-      playerWinString += pieceOrBlank;
-    }
-    if (playerWinString.includes('XXXX') || playerWinString.includes('YYYY')) {
-      console.log(this.state.currentPlayer, ' Wins!');
-    }
-  }
-
-  checkHorizontalWin(board, row) {
-    let playerWinString = board[row].join('');
-
-    if (playerWinString.includes('XXXX') || playerWinString.includes('YYYY')) {
-      console.log(this.state.currentPlayer, ' Wins!');
-    }
-  }
-  checkDiagonalDescWin(board, row, col) {
-    let start;
-    let playerWinString = '';
-    if (row === col) {
-      start = [0, 0];
-    }
-    if (col < row) {
-      start = [Math.abs(row - col), 0];
-    }
-    if (col > row) {
-      start = [0, Math.abs(row - col)];
-    }
-    while (start[0] < board.length && start[1] < board[0].length) {
-      playerWinString += board[start[0]][start[1]];
-      start[0]++;
-      start[1]++;
-    }
-    if (playerWinString.includes('XXXX') || playerWinString.includes('YYYY')) {
-      console.log(this.state.currentPlayer, ' Wins!');
-    }
-  }
-
-  checkDiagonalAscWin(board, row, col) {
-    let start;
-    let playerWinString = '';
-
-    if (col + row > board[0].length - 1) {
-      start = [row, board[0].length - 1];
-    } else {
-      start = [0, row + col];
-    }
-    while (start[0] < board.length && start[1] >= 0) {
-      playerWinString += board[start[0]][start[1]];
-      start[0]++;
-      start[1]--;
-    }
-    console.log(playerWinString);
-    if (playerWinString.includes('XXXX') || playerWinString.includes('YYYY')) {
-      console.log(this.state.currentPlayer, ' Wins!');
+  checkTie(turns) {
+    if (turns === 42) {
+      console.log('TIE GAME');
     }
   }
 
@@ -115,9 +72,20 @@ class App extends React.Component {
   }
 
   render() {
-    return (
+    return this.state.end ? (
+      <div>
+        <h1>{this.state.currentPlayer === 'X' ? 'Y' : 'X'} Wins!</h1>
+        <h2>Refresh to play again</h2>
+        <Board
+          board={this.state.board}
+          currentPlayer={this.state.currentPlayer}
+          placePiece={(e) => console.log('game over, refresh to restart')}
+        />
+      </div>
+    ) : (
       <div>
         <h1>Connect Four!</h1>
+        <h2>{this.state.currentPlayer + "'s turn"}</h2>
         <Board
           board={this.state.board}
           placePiece={this.placePiece}
