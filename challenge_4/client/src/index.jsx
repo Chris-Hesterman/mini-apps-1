@@ -57,12 +57,6 @@ class App extends React.Component {
     }
   }
 
-  checkTie(turns) {
-    if (turns === 42) {
-      console.log('TIE GAME');
-    }
-  }
-
   componentDidMount() {
     let boardMatrix = [];
     for (let i = 0; i < 6; i++) {
@@ -72,7 +66,7 @@ class App extends React.Component {
   }
 
   render() {
-    return this.state.end ? (
+    return this.state.end && this.state.turnsTaken < 42 ? (
       <div>
         <h1>{this.state.currentPlayer === 'X' ? 'Y' : 'X'} Wins!</h1>
         <h2>Refresh to play again</h2>
@@ -82,7 +76,7 @@ class App extends React.Component {
           placePiece={(e) => console.log('game over, refresh to restart')}
         />
       </div>
-    ) : (
+    ) : this.state.turnsTaken < 42 ? (
       <div>
         <h1>Connect Four!</h1>
         <h2>{this.state.currentPlayer + "'s turn"}</h2>
@@ -90,6 +84,16 @@ class App extends React.Component {
           board={this.state.board}
           placePiece={this.placePiece}
           currentPlayer={this.state.currentPlayer}
+        />
+      </div>
+    ) : (
+      <div>
+        <h1> Tie Game!</h1>
+        <h2>Refresh to play again</h2>
+        <Board
+          board={this.state.board}
+          currentPlayer={this.state.currentPlayer}
+          placePiece={(e) => console.log('game over, refresh to restart')}
         />
       </div>
     );
